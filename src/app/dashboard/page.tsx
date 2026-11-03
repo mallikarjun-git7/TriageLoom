@@ -1,3 +1,4 @@
+import { ServiceRegistry } from "@/components/service-registry";
 import { IncidentManager } from "@/components/incident-manager";
 import { Suspense } from "react";
 import { headers } from "next/headers";
@@ -47,6 +48,7 @@ async function AuthenticatedDashboard() {
 
         <OrganizationManager />
         <IncidentManager />
+        <ServiceRegistry />
       </div>
     </main>
   );

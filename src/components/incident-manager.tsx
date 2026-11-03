@@ -29,6 +29,11 @@ export function IncidentManager() {
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [organizationId, setOrganizationId] = useState("");
   const [incidents, setIncidents] = useState<Incident[]>([]);
+  const [availableServices, setAvailableServices] = useState<
+    { id: string; name: string }[]
+  >([]);
+  const [serviceId, setServiceId] = useState("");
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [severity, setSeverity] = useState<Incident["severity"]>("SEV3");
@@ -101,6 +106,45 @@ export function IncidentManager() {
     return () => controller.abort();
   }, [organizationId]);
 
+  useEffect(() => {
+    setAvailableServices([]);
+    setServiceId("");
+
+    if (!organizationId) return;
+
+    const controller = new AbortController();
+
+    async function loadServices() {
+      try {
+        const response = await fetch(
+          `/api/organizations/${organizationId}/services`,
+          {
+            cache: "no-store",
+            credentials: "same-origin",
+            signal: controller.signal,
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Unable to load services");
+        }
+
+        const data = await response.json();
+
+        if (!controller.signal.aborted) {
+          setAvailableServices(data.services ?? []);
+        }
+      } catch {
+        if (!controller.signal.aborted) {
+          setError("Unable to load service options.");
+        }
+      }
+    }
+
+    loadServices();
+    return () => controller.abort();
+  }, [organizationId]);
+
   async function createIncident(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!organizationId) return;
@@ -120,6 +164,7 @@ export function IncidentManager() {
             title,
             description,
             severity,
+            ...(serviceId ? { serviceId } : {}),
           }),
         }
       );
@@ -209,6 +254,22 @@ export function IncidentManager() {
                   placeholder="Describe the symptoms and affected systems..."
                   className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-white outline-none focus:border-cyan-400"
                 />
+              </label>
+
+              <label className="block text-sm text-slate-300">
+                Affected service
+                <select
+                  value={serviceId}
+                  onChange={(event) => setServiceId(event.target.value)}
+                  className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-white"
+                >
+                  <option value="">Not specified</option>
+                  {availableServices.map((service) => (
+                    <option key={service.id} value={service.id}>
+                      {service.name}
+                    </option>
+                  ))}
+                </select>
               </label>
 
               <label className="block text-sm text-slate-300">

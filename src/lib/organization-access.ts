@@ -13,6 +13,7 @@ type Role = typeof memberships.$inferSelect.role;
 const permissions = {
   "organization:read": ["owner", "admin", "responder", "viewer"],
   "incident:read": ["owner", "admin", "responder", "viewer"],
+  "service:create": ["owner", "admin"],
   "incident:create": ["owner", "admin", "responder"],
   "incident:update": ["owner", "admin", "responder"],
   "members:manage": ["owner", "admin"],
