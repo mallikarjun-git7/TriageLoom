@@ -1,0 +1,25 @@
+import { NextResponse } from "next/server";
+import { sql } from "drizzle-orm";
+import { db } from "@/db";
+
+
+export async function GET() {
+  try {
+    await db.execute(sql`SELECT 1`);
+
+    return NextResponse.json({
+      status: "ok",
+      application: "TriageLoom",
+      database: "connected",
+    });
+  } catch {
+    return NextResponse.json(
+      {
+        status: "error",
+        application: "TriageLoom",
+        database: "unavailable",
+      },
+      { status: 503 }
+    );
+  }
+}

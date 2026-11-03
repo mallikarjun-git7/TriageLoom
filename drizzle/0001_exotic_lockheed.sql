@@ -1,0 +1,4 @@
+ALTER TABLE "incident_events" ADD CONSTRAINT "incident_events_tenant_fk" FOREIGN KEY ("organization_id","incident_id") REFERENCES "public"."incidents"("organization_id","id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "incident_events" ADD CONSTRAINT "incident_events_actor_membership_fk" FOREIGN KEY ("organization_id","actor_id") REFERENCES "public"."memberships"("organization_id","user_id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "incidents" ADD CONSTRAINT "incidents_creator_membership_fk" FOREIGN KEY ("organization_id","created_by_id") REFERENCES "public"."memberships"("organization_id","user_id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "incidents" ADD CONSTRAINT "incidents_assignee_membership_fk" FOREIGN KEY ("organization_id","assigned_to_id") REFERENCES "public"."memberships"("organization_id","user_id") ON DELETE no action ON UPDATE no action;
