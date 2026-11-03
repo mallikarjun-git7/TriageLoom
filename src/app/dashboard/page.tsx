@@ -1,3 +1,4 @@
+import { IncidentManager } from "@/components/incident-manager";
 import { Suspense } from "react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -45,6 +46,7 @@ async function AuthenticatedDashboard() {
         </section>
 
         <OrganizationManager />
+        <IncidentManager />
       </div>
     </main>
   );
