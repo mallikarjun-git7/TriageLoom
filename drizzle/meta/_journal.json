@@ -15,6 +15,20 @@
       "when": 1793719032728,
       "tag": "0001_exotic_lockheed",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793720363873,
+      "tag": "0002_steep_proteus",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793720500232,
+      "tag": "0003_faulty_rocket_racer",
+      "breakpoints": true
     }
   ]
 }
