@@ -1,5 +1,7 @@
 "use client";
 
+import { IncidentReplay } from "@/components/incident-replay";
+
 import { useState } from "react";
 
 type Status = "open" | "investigating" | "mitigating" | "resolved";
@@ -188,6 +190,10 @@ export function IncidentTimeline({
                 </li>
               ))}
             </ol>
+          )}
+
+          {events.length > 0 && (
+            <IncidentReplay events={events} />
           )}
         </div>
       )}
