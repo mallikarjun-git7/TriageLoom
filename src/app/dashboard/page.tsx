@@ -1,3 +1,4 @@
+import { ImpactGraph } from "@/components/impact-graph";
 import { OperationsAnalytics } from "@/components/operations-analytics";
 import { ServiceRegistry } from "@/components/service-registry";
 import { IncidentManager } from "@/components/incident-manager";
@@ -51,6 +52,7 @@ async function AuthenticatedDashboard() {
         <IncidentManager />
         <OperationsAnalytics />
         <ServiceRegistry />
+        <ImpactGraph />
       </div>
     </main>
   );

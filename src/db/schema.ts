@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import {
   pgTable,
   pgEnum,
@@ -11,6 +12,7 @@ import {
   index,
   uniqueIndex,
   foreignKey,
+  check,
 } from "drizzle-orm/pg-core";
 
 export const memberRole = pgEnum("member_role", [
@@ -250,3 +252,44 @@ export const verification = pgTable("verification", {
     .defaultNow()
     .notNull(),
 });
+
+// ImpactGraph: a service depends on another service.
+export const serviceDependencies = pgTable(
+  "service_dependencies",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    organizationId: uuid("organization_id")
+      .notNull()
+      .references(() => organizations.id),
+    dependentServiceId: uuid("dependent_service_id").notNull(),
+    dependencyServiceId: uuid("dependency_service_id").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    uniqueIndex("service_dependencies_unique").on(
+      table.organizationId,
+      table.dependentServiceId,
+      table.dependencyServiceId
+    ),
+    index("service_dependencies_dependency_idx").on(
+      table.organizationId,
+      table.dependencyServiceId
+    ),
+    foreignKey({
+      name: "service_dependencies_dependent_fk",
+      columns: [table.organizationId, table.dependentServiceId],
+      foreignColumns: [services.organizationId, services.id],
+    }),
+    foreignKey({
+      name: "service_dependencies_dependency_fk",
+      columns: [table.organizationId, table.dependencyServiceId],
+      foreignColumns: [services.organizationId, services.id],
+    }),
+    check(
+      "service_dependencies_no_self_reference",
+      sql`${table.dependentServiceId} <> ${table.dependencyServiceId}`
+    ),
+  ]
+);
