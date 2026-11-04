@@ -1,3 +1,4 @@
+import { OperationsAnalytics } from "@/components/operations-analytics";
 import { ServiceRegistry } from "@/components/service-registry";
 import { IncidentManager } from "@/components/incident-manager";
 import { Suspense } from "react";
@@ -48,6 +49,7 @@ async function AuthenticatedDashboard() {
 
         <OrganizationManager />
         <IncidentManager />
+        <OperationsAnalytics />
         <ServiceRegistry />
       </div>
     </main>
