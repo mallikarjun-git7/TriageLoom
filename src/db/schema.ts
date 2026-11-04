@@ -293,3 +293,48 @@ export const serviceDependencies = pgTable(
     ),
   ]
 );
+
+
+// SLA Lab: severity-specific targets within each organization.
+export const slaPolicies = pgTable(
+  "sla_policies",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+
+    organizationId: uuid("organization_id")
+      .notNull()
+      .references(() => organizations.id),
+
+    severity: incidentSeverity("severity").notNull(),
+
+    responseTargetMinutes: integer("response_target_minutes")
+      .notNull(),
+
+    resolutionTargetMinutes: integer("resolution_target_minutes")
+      .notNull(),
+
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    uniqueIndex("sla_policies_org_severity_unique").on(
+      table.organizationId,
+      table.severity
+    ),
+
+    check(
+      "sla_response_target_positive",
+      sql`${table.responseTargetMinutes} > 0`
+    ),
+
+    check(
+      "sla_resolution_target_positive",
+      sql`${table.resolutionTargetMinutes} > 0`
+    ),
+  ]
+);

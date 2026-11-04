@@ -1,3 +1,5 @@
+import { IncidentSlaMonitor } from "@/components/incident-sla-monitor";
+import { SlaLab } from "@/components/sla-lab";
 import { ImpactGraph } from "@/components/impact-graph";
 import { OperationsAnalytics } from "@/components/operations-analytics";
 import { ServiceRegistry } from "@/components/service-registry";
@@ -53,6 +55,8 @@ async function AuthenticatedDashboard() {
         <OperationsAnalytics />
         <ServiceRegistry />
         <ImpactGraph />
+        <SlaLab />
+        <IncidentSlaMonitor />
       </div>
     </main>
   );
