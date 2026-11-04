@@ -3,6 +3,7 @@ import { and, asc, eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { db } from "@/db";
+import { canTransition } from "@/lib/incident-lifecycle";
 import { incidents, incidentEvents } from "@/db/schema";
 import { requireOrganizationAccess } from "@/lib/organization-access";
 
@@ -22,14 +23,8 @@ const statusSchema = z.object({
   ]),
 }).strict();
 
-type Status = z.infer<typeof statusSchema>["status"];
 
-const allowedTransitions: Record<Status, Status[]> = {
-  open: ["investigating"],
-  investigating: ["mitigating"],
-  mitigating: ["resolved"],
-  resolved: ["investigating"],
-};
+
 
 export async function GET(
   _request: NextRequest,
@@ -162,7 +157,7 @@ export async function PATCH(
 
       const nextStatus = parsed.data.status;
 
-      if (!allowedTransitions[current.status].includes(nextStatus)) {
+      if (!canTransition(current.status, nextStatus)) {
         return { type: "invalid" as const };
       }
 
